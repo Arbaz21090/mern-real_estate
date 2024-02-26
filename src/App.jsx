@@ -1,25 +1,35 @@
 import "./App.css";
+import About from "./pages/About";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
+import SignOut from "./pages/SignOut";
+import Signin from "./pages/Signin";
 import { useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 /** @format */
 
 
 
-function App() {
-  const [count, setCount] = useState(0);
 
+/** @format */
+
+/** @format */
+
+/** @format */
+
+function App() {
   return (
     <>
-      <h1 class="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
-        <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-          Better Data
-        </span>{" "}
-        Scalable AI.
-      </h1>
-      <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
-        Here at Flowbite we focus on markets where technology, innovation, and
-        capital can unlock long-term value and drive economic growth.
-      </p>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/aboutus" element={<About />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/signout" element={<SignOut />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
