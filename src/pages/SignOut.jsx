@@ -17,26 +17,6 @@ import * as React from "react";
 
 /** @format */
 
-/** @format */
-
-/** @format */
-
-/** @format */
-
-/** @format */
-
-/** @format */
-
-/** @format */
-
-/** @format */
-
-/** @format */
-
-/** @format */
-
-/** @format */
-
 function Copyright(props) {
   return (
     <Typography
