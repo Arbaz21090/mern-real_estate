@@ -1,6 +1,5 @@
-/** @format */
-
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -13,40 +12,46 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { message } from "antd";
+import axios from "axios";
 import * as React from "react";
-
-/** @format */
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Real State
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import { useState } from "react";
+import { useAlert } from "react-alert";
+import { NavLink, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const defaultTheme = createTheme();
 
 export default function Signin() {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const alert = useAlert();
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const user = {
+      username,
+      email,
+      password,
+    };
+    try {
+      const { data } = await axios.post(
+        "http://localhost:4500/api/v1/user/registration",
+        user
+      );
+      setUsername(" ");
+      setEmail(" ");
+      setPassword(" ");
+      if (data.success) {
+        alert.success("Registration Successful");
+        navigate("/signin");
+      } else {
+        alert.error(data.message);
+      }
+    } catch (e) {
+      alert.error(e);
+    }
   };
 
   return (
@@ -61,9 +66,9 @@ export default function Signin() {
             alignItems: "center",
           }}
         >
-          {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar> */}
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <PersonAddIcon />
+          </Avatar>
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
@@ -72,11 +77,13 @@ export default function Signin() {
               margin="normal"
               required
               fullWidth
-              id="name"
+              id="username"
               label="Name"
-              name="name"
+              name="username"
               autoComplete="name"
               autoFocus
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -88,6 +95,8 @@ export default function Signin() {
               autoComplete="email"
               type="email"
               autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -98,21 +107,13 @@ export default function Signin() {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="cpassword"
-              label="Confirm_Password"
-              type="cpassword"
-              id="cpassword"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
@@ -122,20 +123,19 @@ export default function Signin() {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
+            
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                <NavLink
+                  to={"/signin"}
+                  variant="body2"
+                  style={{ color: "dodgerblue" }}
+                >
+                  {"Already have an account? Sign In"}
+                </NavLink>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );
