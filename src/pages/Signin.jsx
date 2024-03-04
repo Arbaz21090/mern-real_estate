@@ -11,8 +11,11 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import * as React from "react";
-import { NavLink } from "react-router-dom";
+import { message } from "antd";
+import axios from "axios";
+import React, { useState } from "react";
+import { useAlert } from "react-alert";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -37,14 +40,30 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Signin() {
-  
-  const handleSubmit = (event) => {
+  const [email, setEmail] =useState("")
+  const [password, setPassword]=useState("")
+  const navigate=useNavigate()
+  const alert=useAlert()
+  const handleSubmit = async(event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const user={
+      email,
+      password
+    }
+    setEmail(" ")
+    setPassword(" ")
+    try {
+      const {data}=await axios.post("http://localhost:4500/api/v1/user/login", user)
+     
+      if(data.success){
+        alert.success(data.message)
+        navigate("/")
+      }else{
+        alert.error(data.message);
+      }
+    } catch (error) {
+      alert.error("Invalid credentials");
+    }
   };
 
   return (
@@ -68,18 +87,21 @@ export default function Signin() {
           <Box
             component="form"
             onSubmit={handleSubmit}
-            noValidate
+           Validate
             sx={{ mt: 1 }}
           >
             <TextField
               margin="normal"
               required
               fullWidth
+              type="email"
               id="email"
               label="Email Address"
               name="email"
               autoComplete="email"
               autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -90,6 +112,8 @@ export default function Signin() {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
