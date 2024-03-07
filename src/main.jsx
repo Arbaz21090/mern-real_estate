@@ -2,8 +2,11 @@ import React from "react";
 import { Provider as AlertProvider, positions, transitions } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import App from "./App.jsx";
 import "./index.css";
+import { persistor, store } from "./redux/store.js";
 
 /** @format */
 
@@ -22,9 +25,11 @@ const options = {
   transition: transitions.SCALE,
 };
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  <Provider store={store}>
+       <PersistGate loading={null} persistor={persistor}>
     <AlertProvider template={AlertTemplate} {...options}>
       <App />
     </AlertProvider>
-  </React.StrictMode>
+    </PersistGate>
+  </Provider>
 );

@@ -15,7 +15,9 @@ import { message } from "antd";
 import axios from "axios";
 import React, { useState } from "react";
 import { useAlert } from "react-alert";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+import { signInStart, signInSuccess } from "../redux/user/userSlice";
 
 function Copyright(props) {
   return (
@@ -42,6 +44,10 @@ const defaultTheme = createTheme();
 export default function Signin() {
   const [email, setEmail] =useState("")
   const [password, setPassword]=useState("")
+  // const [error, setError]=useState('')
+  // const [loading, setLoading]=useState(false)
+  const {error, loading}=useSelector(state=>state.user)
+  const dispatch=useDispatch()
   const navigate=useNavigate()
   const alert=useAlert()
   const handleSubmit = async(event) => {
@@ -56,7 +62,10 @@ export default function Signin() {
       const {data}=await axios.post("http://localhost:4500/api/v1/user/login", user)
      
       if(data.success){
-        alert.success(data.message)
+        alert.success("Login Successful")
+        dispatch(signInSuccess(data.user))
+   
+        localStorage.setItem("token", JSON.stringify(data.token))
         navigate("/")
       }else{
         alert.error(data.message);
