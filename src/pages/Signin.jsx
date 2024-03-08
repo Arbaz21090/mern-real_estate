@@ -17,7 +17,8 @@ import React, { useState } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { signInStart, signInSuccess } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
+import { signInFailure, signInStart, signInSuccess } from "../redux/user/userSlice";
 
 function Copyright(props) {
   return (
@@ -59,19 +60,20 @@ export default function Signin() {
     setEmail(" ")
     setPassword(" ")
     try {
+      dispatch(signInStart())
       const {data}=await axios.post("http://localhost:4500/api/v1/user/login", user)
      
-      if(data.success){
-        alert.success("Login Successful")
-        dispatch(signInSuccess(data.user))
-   
-        localStorage.setItem("token", JSON.stringify(data.token))
-        navigate("/")
-      }else{
-        alert.error(data.message);
+      if(data.success==false){
+       dispatch(signInFailure(data.message))
+      return
       }
+        
+        dispatch(signInSuccess(data.user))
+        alert.success("Login Successful")
+        navigate("/")
+      
     } catch (error) {
-      alert.error("Invalid credentials");
+      dispatch(signInFailure(error.message))
     }
   };
 
@@ -81,7 +83,7 @@ export default function Signin() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 3,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -131,12 +133,13 @@ export default function Signin() {
             <Button
               type="submit"
               fullWidth
-          
+             className="hover:opacity-20"
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 1, mb: 0 }}
             >
            Sign In
             </Button>
+            <OAuth sx={{mb:2}}/>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">

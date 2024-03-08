@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useAlert } from "react-alert";
 import { NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import OAuth from "../components/OAuth";
 
 const defaultTheme = createTheme();
 
@@ -60,7 +61,7 @@ export default function Signin() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 4,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -110,18 +111,16 @@ export default function Signin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
+         
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 1, mb: 0 }}
             >
               Sign In
             </Button>
+            <OAuth sx={{ mb: 2 }}/>
             <Grid container>
             
               <Grid item>

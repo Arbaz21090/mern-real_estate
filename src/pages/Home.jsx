@@ -1,16 +1,7 @@
-/** @format */
-
 import React from "react";
 
 /** @format */
 
-/** @format */
-
-/** @format */
-
-/** @format */
-
-/** @format */
 
 const Home = () => {
   return (
